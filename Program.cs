@@ -17,7 +17,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("PermitirTudo", policy =>
     {
-        policy.AllowAnyOrigin()
+        policy.WithOrigins("https://projeto-crud-front.vercel.app")
                 .AllowAnyMethod()
                 .AllowAnyHeader();
     });
