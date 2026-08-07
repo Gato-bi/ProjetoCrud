@@ -1,0 +1,20 @@
+# Dependências
+node_modules/
+bin/
+obj/
+
+# Arquivos de ambiente/configuração sensível
+.env
+appsettings.Development.json
+appsettings.json
+
+# Editor
+.vscode/
+.idea/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
