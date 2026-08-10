@@ -17,6 +17,7 @@ namespace ProjetoCrud.Controllers
             _appDbContext = appDbContext;
         }
 
+        // Endpoint POST api/Paciente: cadastra um novo paciente.
         [HttpPost]
         public async Task<IActionResult> AdicionarPaciente(MED_PACIENTE paciente)
         {
@@ -25,20 +26,24 @@ namespace ProjetoCrud.Controllers
 
             return Ok(paciente);
         }
+        // Endpoint GET api/Paciente: retorna a lista de todos os pacientes cadastrados.
         [HttpGet]
         public async Task<IActionResult> ObterPacientes()
         {
             var pacientes = await _appDbContext.MED_PACIENTE.ToListAsync();
             return Ok(pacientes);
         }
+        // Endpoint PUT api/Paciente/{id}: atualiza os dados de um paciente existente.
         [HttpPut("{id}")]
         public async Task<IActionResult> AtualizarPaciente(int id, MED_PACIENTE paciente)
         {
+            // Busca o paciente pelo ID; retorna 404 se não existir.
             var pacienteExistente = await _appDbContext.MED_PACIENTE.FindAsync(id);
             if (pacienteExistente == null)
             {
                 return NotFound();
             }
+            // Sobrescreve os campos do paciente existente com os valores recebidos.
             pacienteExistente.ID_PAC_RG_CIN = paciente.ID_PAC_RG_CIN;
             pacienteExistente.PAC_CPF = paciente.PAC_CPF;
             pacienteExistente.PAC_NOME_COMPLETO = paciente.PAC_NOME_COMPLETO;
@@ -56,6 +61,7 @@ namespace ProjetoCrud.Controllers
             await _appDbContext.SaveChangesAsync();
             return Ok(pacienteExistente);
         }
+        // Endpoint DELETE api/Paciente/{id}: remove um paciente pelo ID.
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarPaciente(int id)
         {

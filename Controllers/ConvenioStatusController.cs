@@ -15,6 +15,7 @@ namespace ProjetoCrud.Controllers
         {
             _appDbContext = appDbContext;
         }
+        // Endpoint POST api/ConevenioStatus: cadastra um novo status de convênio.
         [HttpPost]
         public async Task<IActionResult> PostActionResultAsync(CONEVENIO_TAB_STATUS conevenioStatus)
         {
@@ -24,6 +25,7 @@ namespace ProjetoCrud.Controllers
             return Ok(conevenioStatus);
         }
 
+        // Endpoint GET api/ConevenioStatus: retorna todos os status de convênio cadastrados.
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -31,18 +33,22 @@ namespace ProjetoCrud.Controllers
 
             return Ok(conevenioStatus);
         }
+        // Endpoint PUT api/ConevenioStatus/{id}: atualiza um status de convênio existente.
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, CONEVENIO_TAB_STATUS conevenioStatus)
         {
+            // Busca o status pelo ID; retorna 404 se não existir.
             var conevenioStatusExistente = await _appDbContext.CONEVENIO_TAB_STATUS.FindAsync(id);
             if (conevenioStatusExistente == null)
             {
                 return NotFound();
             }
+            // Sobrescreve a descrição do status existente com o valor recebido.
             conevenioStatusExistente.PAC_TAB_CONVENIO_STATUS_DESCRICAO = conevenioStatus.PAC_TAB_CONVENIO_STATUS_DESCRICAO;
             await _appDbContext.SaveChangesAsync();
             return Ok(conevenioStatusExistente);
         }
+        // Endpoint DELETE api/ConevenioStatus/{id}: remove um status de convênio pelo ID.
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

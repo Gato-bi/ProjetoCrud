@@ -18,6 +18,7 @@ namespace ProjetoCrud.Controllers
             _appDbContext = appDbContext;
         }
 
+        // Endpoint POST api/Convenio: cadastra um novo convênio.
         [HttpPost]
         public async Task<IActionResult> PostActionResultAsync(PAC_TAB_CONVENIO convenio)
         {
@@ -25,6 +26,7 @@ namespace ProjetoCrud.Controllers
             await _appDbContext.SaveChangesAsync();
             return Ok(convenio);
         }
+        // Endpoint GET api/Convenio: retorna todos os convênios cadastrados.
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -32,15 +34,18 @@ namespace ProjetoCrud.Controllers
 
             return Ok(convenio);
         }
+        // Endpoint PUT api/Convenio/{id}: atualiza um convênio existente.
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, PAC_TAB_CONVENIO convenio)
         {
+            // Busca o convênio pelo ID; retorna 404 se não existir.
             var convenioExistente = await _appDbContext.PAC_TAB_CONVENIO.FindAsync(id);
 
             if (convenioExistente == null)
             {
                 return NotFound();
             }
+            // Sobrescreve os campos do convênio existente com os valores recebidos.
             convenioExistente.ID_PAC_TAB_CONVENIO = convenio.ID_PAC_TAB_CONVENIO;
             convenioExistente.PAC_TAB_CONVENIO_OCULTA = convenio.PAC_TAB_CONVENIO_OCULTA;
             convenioExistente.PAC_TAB_CONVENIO_DESCRICAO = convenio.PAC_TAB_CONVENIO_DESCRICAO;
@@ -50,15 +55,16 @@ namespace ProjetoCrud.Controllers
             return Ok(convenioExistente);
         }
 
+        // Endpoint DELETE api/Convenio/{id}: remove um convênio pelo ID.
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var convenioExistente = await _appDbContext.PAC_TAB_CONVENIO.FindAsync(id);
-            
+
             if (convenioExistente == null)
             {
                 return NotFound();
-            } 
+            }
 
             _appDbContext.PAC_TAB_CONVENIO.Remove(convenioExistente);
             await _appDbContext.SaveChangesAsync();
