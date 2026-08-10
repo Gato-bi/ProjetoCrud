@@ -17,7 +17,9 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("PermitirFront", policy =>
     {
-        policy.WithOrigins("https://projeto-crud-front.vercel.app")
+        policy.WithOrigins(
+            "http://ambulatorial.gearhostpreview.com",
+            "https://ambulatorial.gearhostpreview.com")
                 .AllowAnyMethod()
                 .AllowAnyHeader();
     });
@@ -35,6 +37,5 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors("PermitirFront");
-
 app.MapControllers();
 app.Run();
