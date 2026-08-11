@@ -42,8 +42,7 @@ namespace ProjetoCrud.Controllers
                 join pac in _appDbContext.MED_PACIENTE on ag.ID_PAC_RG_CIN equals pac.ID_PAC_RG_CIN
                 join med in _appDbContext.MED_MEDICO_DADOS on ag.ID_MED_CRM equals med.ID_MED_CRM
                 join esp in _appDbContext.MED_TAB_ESPECIALIDADE on med.ID_MED_TAB_ESPECIALIDADE equals esp.ID_MED_TAB_ESPECIALIDADE
-                join stu in _appDbContext.MED_AGENDAMENTO_STATUS on ag.ID_MED_AGENDAMENTO_STATUS equals stu.ID_MED_AGENDAMENTO_STATUS
-               // Projeta apenas os campos necessários em um objeto anônimo.
+                // Projeta apenas os campos necessários em um objeto anônimo.
                 select new
                 {
                     AgendamentoId = ag.ID_MED_AGENDAMENTO,
@@ -52,7 +51,6 @@ namespace ProjetoCrud.Controllers
                     Paciente = pac.PAC_NOME_COMPLETO,
                     Medico = med.MED_NOME_COMPLETO,
                     Especialidade = esp.MED_TAB_ESPECIALIDADE_DESCRICAO,
-                    Status = stu.MED_AGENDAMENTO_STATUS_DESCRICAO
                 }
                     ).ToListAsync(); // Executa a consulta de forma assíncrona.
                 return Ok(agendamentos);
