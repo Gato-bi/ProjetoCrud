@@ -60,33 +60,17 @@ namespace ProjetoCrud.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> AtualizarAgendamento(int id, MED_AGENDAMENTO agendamento)
         {
-            try
+            var agendamentoExistente = await _appDbContext.MED_AGENDAMENTO.FindAsync(id);
+            if (agendamentoExistente == null)
             {
-                var agendamentoExistente = await _appDbContext.MED_AGENDAMENTO.FindAsync(id);
-                if (agendamentoExistente == null)
-                {
-                    return NotFound();
-                }
+                return NotFound();
+            }
 
-                agendamentoExistente.ID_MED_CRM = agendamento.ID_MED_CRM;
-                agendamentoExistente.ID_PAC_RG_CIN = agendamento.ID_PAC_RG_CIN;
-                agendamentoExistente.ID_MED_TAB_AGENDA_PERIODO = agendamento.ID_MED_TAB_AGENDA_PERIODO;
-                agendamentoExistente.ID_MED_AGENDAMENTO_STATUS = agendamento.ID_MED_AGENDAMENTO_STATUS;
-                agendamentoExistente.MED_AGENDAMENTO_HORARIO = agendamento.MED_AGENDAMENTO_HORARIO;
-                agendamentoExistente.MED_AGENDAMENTO_DATA = agendamento.MED_AGENDAMENTO_DATA;
+            agendamentoExistente.MED_AGENDAMENTO_HORARIO = agendamento.MED_AGENDAMENTO_HORARIO;
+            agendamentoExistente.MED_AGENDAMENTO_DATA = agendamento.MED_AGENDAMENTO_DATA;
 
-                await _appDbContext.SaveChangesAsync();
-                return Ok(agendamentoExistente);
-            }
-            catch (DbUpdateException dbEx)
-            {
-                var inner = dbEx.InnerException?.Message ?? dbEx.Message;
-                return StatusCode(500, new { erro = "Erro ao salvar no banco", detalhe = inner });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { erro = ex.Message, stack = ex.StackTrace });
-            }
+            await _appDbContext.SaveChangesAsync();
+            return Ok(agendamentoExistente);
         }
         // Endpoint DELETE api/Agendamento/{id}: remove um agendamento pelo ID.
         [HttpDelete("{id}")]
