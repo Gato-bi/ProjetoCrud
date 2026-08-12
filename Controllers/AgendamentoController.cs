@@ -42,6 +42,7 @@ namespace ProjetoCrud.Controllers
                 join pac in _appDbContext.MED_PACIENTE on ag.ID_PAC_RG_CIN equals pac.ID_PAC_RG_CIN
                 join med in _appDbContext.MED_MEDICO_DADOS on ag.ID_MED_CRM equals med.ID_MED_CRM
                 join esp in _appDbContext.MED_TAB_ESPECIALIDADE on med.ID_MED_TAB_ESPECIALIDADE equals esp.ID_MED_TAB_ESPECIALIDADE
+                
                 // Projeta apenas os campos necessários em um objeto anônimo.
                 select new
                 {
@@ -59,22 +60,33 @@ namespace ProjetoCrud.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> AtualizarAgendamento(int id, MED_AGENDAMENTO agendamento)
         {
-            // Busca o agendamento pelo ID; retorna 404 se não existir.
-            var agendamentoExistente = await _appDbContext.MED_AGENDAMENTO.FindAsync(id);
-            if (agendamentoExistente == null)
+            try
             {
-                return NotFound();
-            }
-            // Sobrescreve os campos do agendamento existente com os valores recebidos.
-            agendamentoExistente.ID_MED_CRM = agendamento.ID_MED_CRM;
-            agendamentoExistente.ID_PAC_RG_CIN = agendamento.ID_PAC_RG_CIN;
-            agendamentoExistente.ID_MED_TAB_AGENDA_PERIODO = agendamento.ID_MED_TAB_AGENDA_PERIODO;
-            agendamentoExistente.ID_MED_AGENDAMENTO_STATUS = agendamento.ID_MED_AGENDAMENTO_STATUS;
-            agendamentoExistente.MED_AGENDAMENTO_HORARIO = agendamento.MED_AGENDAMENTO_HORARIO;
-            agendamentoExistente.MED_AGENDAMENTO_DATA = agendamento.MED_AGENDAMENTO_DATA;
+                var agendamentoExistente = await _appDbContext.MED_AGENDAMENTO.FindAsync(id);
+                if (agendamentoExistente == null)
+                {
+                    return NotFound();
+                }
 
-            await _appDbContext.SaveChangesAsync();
-            return Ok(agendamentoExistente);
+                agendamentoExistente.ID_MED_CRM = agendamento.ID_MED_CRM;
+                agendamentoExistente.ID_PAC_RG_CIN = agendamento.ID_PAC_RG_CIN;
+                agendamentoExistente.ID_MED_TAB_AGENDA_PERIODO = agendamento.ID_MED_TAB_AGENDA_PERIODO;
+                agendamentoExistente.ID_MED_AGENDAMENTO_STATUS = agendamento.ID_MED_AGENDAMENTO_STATUS;
+                agendamentoExistente.MED_AGENDAMENTO_HORARIO = agendamento.MED_AGENDAMENTO_HORARIO;
+                agendamentoExistente.MED_AGENDAMENTO_DATA = agendamento.MED_AGENDAMENTO_DATA;
+
+                await _appDbContext.SaveChangesAsync();
+                return Ok(agendamentoExistente);
+            }
+            catch (DbUpdateException dbEx)
+            {
+                var inner = dbEx.InnerException?.Message ?? dbEx.Message;
+                return StatusCode(500, new { erro = "Erro ao salvar no banco", detalhe = inner });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { erro = ex.Message, stack = ex.StackTrace });
+            }
         }
         // Endpoint DELETE api/Agendamento/{id}: remove um agendamento pelo ID.
         [HttpDelete("{id}")]
