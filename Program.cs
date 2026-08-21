@@ -3,15 +3,18 @@ using ProjetoCrud.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
-
 var conectionString = builder.Configuration.GetConnectionString("AppDbConnectionString");
-builder.Services.AddDbContext<AppDbContext>(options => options.UseMySql(conectionString, ServerVersion.AutoDetect(conectionString)));
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseMySql(
+        conectionString,
+        ServerVersion.AutoDetect(conectionString)
+    )
+);
 
 builder.Services.AddCors(options =>
 {
@@ -19,15 +22,18 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(
             "http://ambulatorial.gearhostpreview.com",
-            "https://ambulatorial.gearhostpreview.com")
-                .AllowAnyMethod()
-                .AllowAnyHeader();
+            "https://ambulatorial.gearhostpreview.com",
+
+            // Frontend local
+            "http://127.0.0.1:5500",
+            "http://localhost:5500"
+        )
+        .AllowAnyMethod()
+        .AllowAnyHeader();
     });
 });
 
-
 var app = builder.Build();
-
 
 if (app.Environment.IsDevelopment())
 {
@@ -36,6 +42,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseCors("PermitirFront");
+
 app.MapControllers();
+
 app.Run();
